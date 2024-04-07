@@ -8,11 +8,9 @@ Based on [Madalaski's Pixel Art shader tutorial](https://github.com/Madalaski/Pi
 1. Create a Pixelated layer.
 2. Add the `Pixelate` renderer feature to your renderer asset. And make sure that:
    - It's layer is the pixelate layer
-   - Material is the `Blit` material from `Pixelate` folder
-   - `Copy Depth Material` is the `CopyDepth` material from `Pixelate` folder
    - RP Event is `Before Rendering Transparents`
 3. Remove the pixelate layer from renderer asset's opaque and transparent layer masks.
-4. Now every object on the pixelate layer should be pixelated.
+4. Now every object with a forward rendering shader on the pixelate layer should be pixelated.
 
 # TODO
 
@@ -26,7 +24,7 @@ The feature has a pixel density slider but it doesn't update immediately. Fix th
 
 Pixelated objects cannot be layered since their layer has to be a specific one.
 
-Pixelated resolution could be anything. I haven't looked into it. When investigating this look into the RTHandles.Alloc function as it takes different scaling options as arguments.
+Pixelated resolution could be something weird. I haven't looked into it. When investigating this look into the RTHandles.Alloc function as it takes different scaling options as arguments.
 
 # Notes
 
