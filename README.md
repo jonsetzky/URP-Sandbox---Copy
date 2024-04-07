@@ -20,9 +20,11 @@ Add support for HDRP.
 
 The feature has a pixel density slider but it doesn't update immediately. Fix that.
 
-# Problems
-
 Pixelated objects cannot be layered since their layer has to be a specific one.
+This probably can be fixed by using the renderLayerMask in filter settings instead
+of the GameObject layering.
+
+# Problems
 
 Pixelated resolution could be something weird. I haven't looked into it. When investigating this look into the RTHandles.Alloc function as it takes different scaling options as arguments.
 
