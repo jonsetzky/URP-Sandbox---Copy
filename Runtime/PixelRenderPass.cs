@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-internal class PixelRenderPass : ScriptableRenderPass
+public class PixelRenderPass : ScriptableRenderPass
 {
     RTHandle m_ColorHandle;
     RTHandle m_DepthHandle;

@@ -5,7 +5,7 @@ using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 
 [DisallowMultipleRendererFeature("Pixelate")]
-internal class PixelRenderFeature : ScriptableRendererFeature
+public class PixelRenderFeature : ScriptableRendererFeature
 {
     private RTHandle m_ColorHandle = null;
     private RTHandle m_DepthHandle = null;
