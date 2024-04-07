@@ -10,6 +10,7 @@ internal class PixelRenderPass : ScriptableRenderPass
 
     ProfilingSampler m_ProfilingSampler = new ProfilingSampler("Pixel Render Pass");
     Material m_Material;
+    Material m_CopyDepthMaterial;
     RTHandle m_CameraColorTarget;
     RTHandle m_CameraDepthTarget;
 
@@ -17,9 +18,15 @@ internal class PixelRenderPass : ScriptableRenderPass
     FilteringSettings m_FilteringSettings;
     RendererListParams m_RendererListParams;
 
-    public PixelRenderPass(Material material, LayerMask layerMask, RenderPassEvent rpEvent)
+    public PixelRenderPass(
+        Material material,
+        Material copyDepthMaterial,
+        LayerMask layerMask,
+        RenderPassEvent rpEvent
+    )
     {
         m_Material = material;
+        m_CopyDepthMaterial = copyDepthMaterial;
         renderPassEvent = rpEvent;
 
         m_ShaderTagIdList.Add(new ShaderTagId("UniversalForward"));
@@ -94,8 +101,20 @@ internal class PixelRenderPass : ScriptableRenderPass
 
             var rl = context.CreateRendererList(ref m_RendererListParams);
             CoreUtils.DrawRendererList(context, cmd, rl);
-
             Blitter.BlitCameraTexture(cmd, m_ColorHandle, m_CameraColorTarget, m_Material, 0);
+
+            m_CopyDepthMaterial.SetTexture(
+                "_RTDepth",
+                m_DepthHandle,
+                RenderTextureSubElement.Depth
+            );
+            Blitter.BlitCameraTexture(
+                cmd,
+                m_DepthHandle,
+                m_CameraDepthTarget,
+                m_CopyDepthMaterial,
+                0
+            );
         }
         context.ExecuteCommandBuffer(cmd);
         cmd.Clear();

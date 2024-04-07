@@ -9,6 +9,7 @@ Based on [Madalaski's Pixel Art shader tutorial](https://github.com/Madalaski/Pi
 2. Add the `Pixelate` renderer feature to your renderer asset. And make sure that:
    - It's layer is the pixelate layer
    - Material is the `Blit` material from `Pixelate` folder
+   - `Copy Depth Material` is the `CopyDepth` material from `Pixelate` folder
    - RP Event is `Before Rendering Transparents`
 3. Remove the pixelate layer from renderer asset's opaque and transparent layer masks.
 4. Now every object on the pixelate layer should be pixelated.

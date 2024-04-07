@@ -150,5 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   m_Material: {fileID: 2100000, guid: e8aec4e0045f6dd46aff2c5c4a86c8c2, type: 2}
+  m_CopyDepthMaterial: {fileID: 2100000, guid: d36c507a51d08de45858e2d68524b4d9, type: 2}
   m_Layer: 6
+  m_PixelDensity: 6
   m_RPEvent: 450

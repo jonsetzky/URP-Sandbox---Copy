@@ -11,6 +11,7 @@ internal class PixelRenderFeature : ScriptableRendererFeature
     private RTHandle m_DepthHandle = null;
 
     public Material m_Material;
+    public Material m_CopyDepthMaterial;
 
     [SerializeField, Layer]
     public int m_Layer;
@@ -86,6 +87,7 @@ internal class PixelRenderFeature : ScriptableRendererFeature
     {
         m_RenderPass = new PixelRenderPass(
             m_Material,
+            m_CopyDepthMaterial,
             new LayerMask { value = 1 << m_Layer },
             m_RPEvent
         );
