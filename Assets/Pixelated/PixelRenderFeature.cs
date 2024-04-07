@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UIElements;
 
+[DisallowMultipleRendererFeature("Pixelate")]
 internal class PixelRenderFeature : ScriptableRendererFeature
 {
     private RTHandle m_ColorHandle = null;
@@ -15,6 +18,9 @@ internal class PixelRenderFeature : ScriptableRendererFeature
     {
         get { return 1 << m_Layer; }
     }
+
+    [Range(1f, 15f)]
+    public float m_PixelDensity = 6.0f;
 
     public RenderPassEvent m_RPEvent = RenderPassEvent.BeforeRenderingTransparents;
 
@@ -42,9 +48,14 @@ internal class PixelRenderFeature : ScriptableRendererFeature
             || renderingData.cameraData.cameraType == CameraType.SceneView
         )
         {
+            float scale = Mathf.Lerp(
+                1.0f,
+                0.01f,
+                Mathf.Pow(1 - Mathf.Clamp01(m_PixelDensity / 15.0f), 1f / 2f)
+            );
             if (m_ColorHandle == null)
                 m_ColorHandle = RTHandles.Alloc(
-                    new Vector2(0.25f, 0.25f),
+                    new Vector2(scale, scale),
                     filterMode: FilterMode.Point,
                     wrapMode: TextureWrapMode.Clamp,
                     depthBufferBits: DepthBits.None,
@@ -52,7 +63,7 @@ internal class PixelRenderFeature : ScriptableRendererFeature
                 );
             if (m_DepthHandle == null)
                 m_DepthHandle = RTHandles.Alloc(
-                    new Vector2(0.25f, 0.25f),
+                    new Vector2(scale, scale),
                     filterMode: FilterMode.Point,
                     wrapMode: TextureWrapMode.Clamp,
                     depthBufferBits: DepthBits.Depth24,
