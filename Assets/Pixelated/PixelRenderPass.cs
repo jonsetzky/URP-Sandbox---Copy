@@ -3,16 +3,12 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-internal class V2PixelRenderPass : ScriptableRenderPass
+internal class PixelRenderPass : ScriptableRenderPass
 {
     RTHandle m_ColorHandle;
     RTHandle m_DepthHandle;
 
-    // Then using RTHandles, the color and the depth properties must be separate
-    // RTHandle m_DestinationColor;
-    // RTHandle m_DestinationDepth;
-
-    ProfilingSampler m_ProfilingSampler = new ProfilingSampler("V2PixelRenderPass");
+    ProfilingSampler m_ProfilingSampler = new ProfilingSampler("Pixel Render Pass");
     Material m_Material;
     RTHandle m_CameraColorTarget;
     RTHandle m_CameraDepthTarget;
@@ -21,7 +17,7 @@ internal class V2PixelRenderPass : ScriptableRenderPass
     FilteringSettings m_FilteringSettings;
     RendererListParams m_RendererListParams;
 
-    public V2PixelRenderPass(Material material, LayerMask layerMask, RenderPassEvent rpEvent)
+    public PixelRenderPass(Material material, LayerMask layerMask, RenderPassEvent rpEvent)
     {
         m_Material = material;
         renderPassEvent = rpEvent;
@@ -46,7 +42,7 @@ internal class V2PixelRenderPass : ScriptableRenderPass
     {
         Camera camera = renderingData.cameraData.camera;
         // remove norender layer from the camera
-        camera.cullingMask &= ~(1 << LayerMask.NameToLayer("NoRender"));
+        // camera.cullingMask &= ~(1 << LayerMask.NameToLayer("NoRender"));
 
         // ConfigureTarget(m_CameraColorTarget);
         // var desc = renderingData.cameraData.cameraTargetDescriptor;
@@ -76,7 +72,7 @@ internal class V2PixelRenderPass : ScriptableRenderPass
         if (
             (
                 cameraData.camera.cameraType != CameraType.Game
-            // && cameraData.camera.cameraType != CameraType.Preview
+                && cameraData.camera.cameraType != CameraType.SceneView
             )
         )
             return;
@@ -84,18 +80,11 @@ internal class V2PixelRenderPass : ScriptableRenderPass
         if (m_Material == null)
             return;
 
-        Pixelate[] pixelObjects = Object.FindObjectsOfType<Pixelate>(false);
-        // foreach (Pixelate pixelObject in pixelObjects)
-        //     pixelObject.SetLayer(Pixelate.pixelLayer);
-
         CommandBuffer cmd = CommandBufferPool.Get();
         using (new ProfilingScope(cmd, m_ProfilingSampler))
         {
             ConfigureTarget(m_ColorHandle, m_DepthHandle);
             cmd.ClearRenderTarget(true, true, Color.clear); // clear both buffers
-
-            // Blitter.BlitCameraTexture(cmd, m_CameraDepthTarget, m_CameraColorTarget);
-            // ConfigureTarget(m_ColorHandle, m_DepthHandle);
 
             // cmd.ClearRenderTarget(false, true, Color.clear); // clear color only
             m_Material.SetTexture("_RTColor", m_ColorHandle, RenderTextureSubElement.Color);
@@ -110,9 +99,6 @@ internal class V2PixelRenderPass : ScriptableRenderPass
         }
         context.ExecuteCommandBuffer(cmd);
         cmd.Clear();
-
-        // foreach (Pixelate pixelObject in pixelObjects)
-        //     pixelObject.SetLayer(Pixelate.noRenderLayer);
 
         CommandBufferPool.Release(cmd);
     }
