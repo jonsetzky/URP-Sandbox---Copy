@@ -1,4 +1,4 @@
-Shader "Unlit/CopyDepth"
+Shader "Unlit/Pixelate/CopyDepth"
 {
     Properties
     {

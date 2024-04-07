@@ -1,4 +1,4 @@
-﻿Shader "Unlit/PixelatedBlit"
+﻿Shader "Unlit/Pixelate/Blit"
 {
     	Properties 
     	{

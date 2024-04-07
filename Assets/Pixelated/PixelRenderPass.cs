@@ -9,7 +9,7 @@ internal class PixelRenderPass : ScriptableRenderPass
     RTHandle m_DepthHandle;
 
     ProfilingSampler m_ProfilingSampler = new ProfilingSampler("Pixel Render Pass");
-    Material m_Material;
+    Material m_BlitMaterial;
     Material m_CopyDepthMaterial;
     RTHandle m_CameraColorTarget;
     RTHandle m_CameraDepthTarget;
@@ -18,15 +18,11 @@ internal class PixelRenderPass : ScriptableRenderPass
     FilteringSettings m_FilteringSettings;
     RendererListParams m_RendererListParams;
 
-    public PixelRenderPass(
-        Material material,
-        Material copyDepthMaterial,
-        LayerMask layerMask,
-        RenderPassEvent rpEvent
-    )
+    public PixelRenderPass(LayerMask layerMask, RenderPassEvent rpEvent)
     {
-        m_Material = material;
-        m_CopyDepthMaterial = copyDepthMaterial;
+        m_BlitMaterial = CoreUtils.CreateEngineMaterial("Unlit/Pixelate/Blit");
+        m_CopyDepthMaterial = CoreUtils.CreateEngineMaterial("Unlit/Pixelate/CopyDepth");
+
         renderPassEvent = rpEvent;
 
         m_ShaderTagIdList.Add(new ShaderTagId("UniversalForward"));
@@ -84,7 +80,7 @@ internal class PixelRenderPass : ScriptableRenderPass
         )
             return;
 
-        if (m_Material == null)
+        if (m_BlitMaterial == null)
             return;
 
         CommandBuffer cmd = CommandBufferPool.Get();
@@ -94,14 +90,17 @@ internal class PixelRenderPass : ScriptableRenderPass
             cmd.ClearRenderTarget(true, true, Color.clear); // clear both buffers
 
             // cmd.ClearRenderTarget(false, true, Color.clear); // clear color only
-            m_Material.SetTexture("_RTColor", m_ColorHandle, RenderTextureSubElement.Color);
-            m_Material.SetTexture("_RTDepth", m_DepthHandle, RenderTextureSubElement.Depth);
-            m_Material.SetVector("_rtHandleScale", m_ColorHandle.rtHandleProperties.rtHandleScale);
+            m_BlitMaterial.SetTexture("_RTColor", m_ColorHandle, RenderTextureSubElement.Color);
+            m_BlitMaterial.SetTexture("_RTDepth", m_DepthHandle, RenderTextureSubElement.Depth);
+            m_BlitMaterial.SetVector(
+                "_rtHandleScale",
+                m_ColorHandle.rtHandleProperties.rtHandleScale
+            );
             // m_Material.SetFloat("_Intensity", m_Intensity);
 
             var rl = context.CreateRendererList(ref m_RendererListParams);
             CoreUtils.DrawRendererList(context, cmd, rl);
-            Blitter.BlitCameraTexture(cmd, m_ColorHandle, m_CameraColorTarget, m_Material, 0);
+            Blitter.BlitCameraTexture(cmd, m_ColorHandle, m_CameraColorTarget, m_BlitMaterial, 0);
 
             m_CopyDepthMaterial.SetTexture(
                 "_RTDepth",
