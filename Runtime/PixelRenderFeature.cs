@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -10,12 +11,7 @@ public class PixelRenderFeature : ScriptableRendererFeature
     private RTHandle m_ColorHandle = null;
     private RTHandle m_DepthHandle = null;
 
-    [SerializeField, Layer]
-    public int m_Layer;
-    public LayerMask m_LayerMask
-    {
-        get { return 1 << m_Layer; }
-    }
+    public LayerMask m_LayerMask;
 
     [Range(1f, 15f)]
     public float m_PixelDensity = 6.0f;
@@ -82,7 +78,7 @@ public class PixelRenderFeature : ScriptableRendererFeature
 
     public override void Create()
     {
-        m_RenderPass = new PixelRenderPass(new LayerMask { value = 1 << m_Layer }, m_RPEvent);
+        m_RenderPass = new PixelRenderPass(m_LayerMask, m_RPEvent);
     }
 
     protected override void Dispose(bool disposing)
