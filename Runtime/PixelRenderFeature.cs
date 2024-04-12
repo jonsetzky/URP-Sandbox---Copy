@@ -16,7 +16,7 @@ namespace Pixelated
         [Range(1f, 15f)]
         public float m_PixelDensity = 6.0f;
 
-        private RenderPassEvent m_RPEvent = RenderPassEvent.BeforeRenderingTransparents;
+        private RenderPassEvent m_RPEvent = RenderPassEvent.AfterRenderingSkybox;
 
         PixelRenderPass m_RenderPass = null;
 

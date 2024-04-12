@@ -10,7 +10,8 @@ Based on [Madalaski's Pixel Art shader tutorial](https://github.com/Madalaski/Pi
    - or locally from disk (this can be done to develop the package)
 2. Add the `Pixelate` renderer feature to your renderer asset.
 3. **Remove the generated pixelate layer from renderer asset's opaque and transparent layer masks.**
-4. Attach `Pixelated/Pixelate` component to an object to pixelate it.
+4. **Make sure Depth Texture mode is `After Opaques`**
+5. Attach `Pixelated/Pixelate` component to an object to pixelate it.
 
 # TODO
 
