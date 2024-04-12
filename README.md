@@ -25,6 +25,10 @@ Pixelated resolution could be something weird. I haven't looked into it. When in
 Changing pixel density scales the texture in weird way. The scaling gets fixed
 after entering/exiting play mode.
 
+SSAO doesn't work with pixelated objects. The fix is probably in render order.
+The layer has to be changed to pixelated before opaque objects are rendered and
+back to normal after pixel pass.
+
 # Notes
 
 Causes a memory leak on 2022.3.9f1. [Due to this?](https://forum.unity.com/threads/rthandles-api-introduced-catastrophic-memory-leak-bug-in-2022-3-8.1486035/)
