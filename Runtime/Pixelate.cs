@@ -24,43 +24,29 @@ namespace Pixelated
 
         private void OnEnable()
         {
-            RenderPipelineManager.beginFrameRendering += OnBeginFrameRendering;
-            RenderPipelineManager.endFrameRendering += OnEndFrameRendering;
+            RenderPipelineManager.beginCameraRendering += OnBeginCameraRendering;
+            RenderPipelineManager.endCameraRendering += OnEndCameraRendering;
         }
 
         private void OnDisable()
         {
-            RenderPipelineManager.beginFrameRendering -= OnBeginFrameRendering;
-            RenderPipelineManager.endFrameRendering -= OnEndFrameRendering;
+            RenderPipelineManager.beginCameraRendering -= OnBeginCameraRendering;
+            RenderPipelineManager.endCameraRendering -= OnEndCameraRendering;
         }
 
-        //         private void Update()
-        //         {
-        // #if UNITY_EDITOR
-        //             // this is required to make the layer changable in editor
-        //             if (
-        //                 gameObject.layer != originalLayer
-        //                 && gameObject.layer != LayerMask.NameToLayer(LAYER_NAME)
-        //             )
-        //                 originalLayer = gameObject.layer;
-        // #endif
-        //         }
-
-        void OnBeginFrameRendering(ScriptableRenderContext context, Camera[] cameras)
+        void OnBeginCameraRendering(ScriptableRenderContext context, Camera camera)
         {
-            // Put the code that you want to execute before the camera renders here
-            // If you are using URP or HDRP, Unity calls this method automatically
-            // If you are writing a custom SRP, you must call RenderPipeline.BeginFrameRendering
             originalLayer = gameObject.layer;
-            gameObject.layer = LayerMask.NameToLayer(LAYER_NAME);
+
+            if ((camera.cullingMask & (1 << originalLayer)) != 0)
+                gameObject.layer = LayerMask.NameToLayer(LAYER_NAME);
+
+            // if object's layer is not on the cameras mask, keep the layer
+            // and the object won't be rendered.
         }
 
-        void OnEndFrameRendering(ScriptableRenderContext context, Camera[] cameras)
+        void OnEndCameraRendering(ScriptableRenderContext context, Camera camera)
         {
-            // Put the code that you want to execute before the camera renders here
-            // If you are using URP or HDRP, Unity calls this method automatically
-            // If you are writing a custom SRP, you must call RenderPipeline.BeginFrameRendering
-
             gameObject.layer = originalLayer;
         }
     }

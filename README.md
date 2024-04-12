@@ -5,7 +5,7 @@ Based on [Madalaski's Pixel Art shader tutorial](https://github.com/Madalaski/Pi
 
 # Deployment
 
-1. Create a layer that is pixelated.
+1. Create a layer named 'Pixel'
 2. Add the `Pixelate` renderer feature to your renderer asset. And make sure that:
    - It's layer is the pixelate layer
    - RP Event is `Before Rendering Transparents`
