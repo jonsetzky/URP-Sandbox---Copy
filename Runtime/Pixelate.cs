@@ -12,6 +12,9 @@ namespace Pixelated
     {
         public const string LAYER_NAME = ".pixelated";
 
+        [SerializeField]
+        private bool m_ApplyToChildren = false;
+
         [HideInInspector]
         public MeshRenderer meshRenderer;
 
@@ -35,20 +38,32 @@ namespace Pixelated
             RenderPipelineManager.endCameraRendering -= OnEndCameraRendering;
         }
 
+        private void SetLayerRecursively(int layer)
+        {
+            gameObject.layer = layer;
+            if (m_ApplyToChildren)
+                for (int i = 0; i < transform.childCount; i++)
+                {
+                    GameObject child = transform.GetChild(i).gameObject;
+                    child.layer = layer;
+                }
+        }
+
         void OnBeginCameraRendering(ScriptableRenderContext context, Camera camera)
         {
             originalLayer = gameObject.layer;
 
-            if ((camera.cullingMask & (1 << originalLayer)) != 0)
-                gameObject.layer = LayerMask.NameToLayer(LAYER_NAME);
-
+            if ((camera.cullingMask & (1 << originalLayer)) == 0)
+                return;
             // if object's layer is not on the cameras mask, keep the layer
             // and the object won't be rendered.
+
+            SetLayerRecursively(LayerMask.NameToLayer(LAYER_NAME));
         }
 
         void OnEndCameraRendering(ScriptableRenderContext context, Camera camera)
         {
-            gameObject.layer = originalLayer;
+            SetLayerRecursively(originalLayer);
         }
     }
 }
