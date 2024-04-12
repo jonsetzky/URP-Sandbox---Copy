@@ -7,6 +7,7 @@ using UnityEngine.Rendering;
 namespace Pixelated
 {
     [ExecuteAlways]
+    [AddComponentMenu("Pixelated/Pixelate")]
     public class Pixelate : MonoBehaviour
     {
         public const string LAYER_NAME = ".pixelated";

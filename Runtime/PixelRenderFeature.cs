@@ -16,7 +16,7 @@ namespace Pixelated
         [Range(1f, 15f)]
         public float m_PixelDensity = 6.0f;
 
-        public RenderPassEvent m_RPEvent = RenderPassEvent.BeforeRenderingTransparents;
+        private RenderPassEvent m_RPEvent = RenderPassEvent.BeforeRenderingTransparents;
 
         PixelRenderPass m_RenderPass = null;
 
@@ -32,6 +32,19 @@ namespace Pixelated
                 renderer.EnqueuePass(m_RenderPass);
         }
 
+        private Vector2Int Scale(Vector2Int size)
+        {
+            float scale = Mathf.Lerp(
+                1.0f,
+                0.01f,
+                Mathf.Pow(1 - Mathf.Clamp01(m_PixelDensity / 15.0f), 1f / 2f)
+            );
+            return new Vector2Int(
+                Mathf.RoundToInt(size.x * scale),
+                Mathf.RoundToInt(size.y * scale)
+            );
+        }
+
         public override void SetupRenderPasses(
             ScriptableRenderer renderer,
             in RenderingData renderingData
@@ -42,27 +55,26 @@ namespace Pixelated
                 || renderingData.cameraData.cameraType == CameraType.SceneView
             )
             {
-                float scale = Mathf.Lerp(
-                    1.0f,
-                    0.01f,
-                    Mathf.Pow(1 - Mathf.Clamp01(m_PixelDensity / 15.0f), 1f / 2f)
-                );
                 if (m_ColorHandle == null)
+                {
                     m_ColorHandle = RTHandles.Alloc(
-                        new Vector2(scale, scale),
+                        Scale,
                         filterMode: FilterMode.Point,
                         wrapMode: TextureWrapMode.Clamp,
                         depthBufferBits: DepthBits.None,
                         name: "_RTColor"
                     );
+                }
                 if (m_DepthHandle == null)
+                {
                     m_DepthHandle = RTHandles.Alloc(
-                        new Vector2(scale, scale),
+                        Scale,
                         filterMode: FilterMode.Point,
                         wrapMode: TextureWrapMode.Clamp,
                         depthBufferBits: DepthBits.Depth24,
                         name: "_RTDepth"
                     );
+                }
 
                 m_RenderPass.Setup(m_ColorHandle, m_DepthHandle);
                 m_RenderPass.SetTarget(
@@ -78,6 +90,15 @@ namespace Pixelated
 
         public override void Create()
         {
+            // if (!(QualitySettings.renderPipeline is UniversalRenderPipelineAsset))
+            // {
+            //     Debug.LogError("Current render pipeline asset is not URP");
+            //     return;
+            // }
+
+            // UniversalRenderPipelineAsset urpAsset =
+            //     GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset;
+
             m_RenderPass = new PixelRenderPass(m_RPEvent);
         }
 

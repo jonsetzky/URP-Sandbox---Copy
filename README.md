@@ -5,12 +5,12 @@ Based on [Madalaski's Pixel Art shader tutorial](https://github.com/Madalaski/Pi
 
 # Deployment
 
-1. Create a layer named 'Pixel'
-2. Add the `Pixelate` renderer feature to your renderer asset. And make sure that:
-   - It's layer is the pixelate layer
-   - RP Event is `Before Rendering Transparents`
-3. Remove the pixelate layer from renderer asset's opaque and transparent layer masks.
-4. Now every object with a forward rendering shader on the pixelate layer should be pixelated.
+1. Import package
+   - from git https://github.com/jonsetzky/unity-pixelated.git
+   - or locally from disk (this can be done to develop the package)
+2. Add the `Pixelate` renderer feature to your renderer asset.
+3. **Remove the generated pixelate layer from renderer asset's opaque and transparent layer masks.**
+4. Attach `Pixelated/Pixelate` component to an object to pixelate it.
 
 # TODO
 
@@ -18,15 +18,12 @@ It works only on opaque forward shaders. Add support for others, such as transpa
 
 Add support for HDRP.
 
-The feature has a pixel density slider but it doesn't update immediately. Fix that.
-
-Pixelated objects cannot be layered since their layer has to be a specific one.
-This probably can be fixed by using the renderLayerMask in filter settings instead
-of the GameObject layering.
-
 # Problems
 
 Pixelated resolution could be something weird. I haven't looked into it. When investigating this look into the RTHandles.Alloc function as it takes different scaling options as arguments.
+
+Changing pixel density scales the texture in weird way. The scaling gets fixed
+after entering/exiting play mode.
 
 # Notes
 

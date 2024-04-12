@@ -48,11 +48,6 @@ namespace Pixelated
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
         {
             Camera camera = renderingData.cameraData.camera;
-            // remove norender layer from the camera
-            // camera.cullingMask &= ~(1 << LayerMask.NameToLayer("NoRender"));
-
-            // ConfigureTarget(m_CameraColorTarget);
-            // var desc = renderingData.cameraData.cameraTargetDescriptor;
             m_RendererListParams = new RendererListParams
             {
                 cullingResults = renderingData.cullResults,
@@ -65,12 +60,6 @@ namespace Pixelated
                 isPassTagName = true,
                 tagName = new ShaderTagId("Pixel Render Objects")
             };
-        }
-
-        public override void OnCameraCleanup(CommandBuffer cmd)
-        {
-            // m_DestinationColor = null;
-            // m_DestinationDepth = null;
         }
 
         public override void Execute(
@@ -103,7 +92,6 @@ namespace Pixelated
                     "_rtHandleScale",
                     m_ColorHandle.rtHandleProperties.rtHandleScale
                 );
-                // m_Material.SetFloat("_Intensity", m_Intensity);
 
                 var rl = context.CreateRendererList(ref m_RendererListParams);
                 CoreUtils.DrawRendererList(context, cmd, rl);
