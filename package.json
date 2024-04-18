@@ -4,10 +4,10 @@
   "description": "The package contains a renderer feature which renders objects in a pixelated fashion.",
   "displayName": "Unity Pixelated",
   "unity": "2022.3",
-  "unityRelease": "23f1",
+  "unityRelease": "16f1",
   "documentationUrl": "https://github.com/jonsetzky/unity-pixelated",
   "dependencies": {
-    "com.unity.render-pipelines.universal": "14.0.10"
+    "com.unity.render-pipelines.universal": "14.0.9"
   },
   "author": {
     "name": "jonsetzky",
