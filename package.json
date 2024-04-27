@@ -1,6 +1,6 @@
 {
   "name": "unity-pixelated",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "The package contains a renderer feature which renders objects in a pixelated fashion.",
   "displayName": "Unity Pixelated",
   "unity": "2022.3",
